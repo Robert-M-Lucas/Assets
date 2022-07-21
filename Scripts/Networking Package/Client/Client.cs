@@ -42,7 +42,7 @@ public class Client : ServerClientParent
 
     #endregion
 
-    public Action DisconnectAction = () => { };
+    public Action<string> DisconnectAction = (_) => { };
 
     public Action OnPlayerUpdateAction = () => { };
     public Action OnPlayerDisconnectAction = () => { };
@@ -342,11 +342,11 @@ public class Client : ServerClientParent
         Stop();
     }
 
-    public void Disconnect()
+    public void Disconnect(string reason = "")
     {
         try
         {
-            DisconnectAction();
+            DisconnectAction(reason);
         }
         catch (Exception e)
         {
@@ -367,7 +367,7 @@ public class Client : ServerClientParent
         }
         catch (Exception e)
         {
-            Debug.Log(e);
+            // Debug.Log(e);
         }
         try
         {
@@ -375,7 +375,7 @@ public class Client : ServerClientParent
         }
         catch (Exception e)
         {
-            Debug.Log(e);
+            // Debug.Log(e);
         }
         try
         {
@@ -383,7 +383,7 @@ public class Client : ServerClientParent
         }
         catch (Exception e)
         {
-            Debug.Log(e);
+            // Debug.Log(e);
         }
         instance = null;
         connected = false;

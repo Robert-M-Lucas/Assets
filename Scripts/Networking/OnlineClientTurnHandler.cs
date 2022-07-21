@@ -30,5 +30,8 @@ public class OnlineClientTurnHandler : TurnHandlerInterface
         return move;
     }
 
-    public override void Cleanup() { Client.getInstance()?.Stop(); Server.getInstance()?.Stop(); }
+    public override void Cleanup() {
+        if (Server.has_instance) { Server.getInstance().Stop(); }
+        if (Client.has_instance) { Client.getInstance().Stop(); }
+    }
 }

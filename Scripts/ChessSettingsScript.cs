@@ -17,10 +17,32 @@ public class ChessSettingsScript : MonoBehaviour
 
     bool locked = false;
 
+    bool QuitToMenuNextFrame = false;
+    string QuitToMenuReason = "";
+
+    void Awake()
+    {
+        NetworkSettings.MainThreadStart();
+    }
     // Start is called before the first frame update
     void Start()
     {
         DontDestroyOnLoad(this);
+
+        QuitReason[] quitReasons = FindObjectsOfType<QuitReason>();
+        foreach (QuitReason quitReason in quitReasons)
+        {
+            if (quitReason.claimed && quitReason.reason != "")
+            {
+                mainMenuCanvasManager.ShowJoinScreen();
+                mainMenuCanvasManager.JoinInfoString = quitReason.reason;
+                Destroy(quitReason.gameObject);
+            }
+            else
+            {
+                quitReason.claimed = true;
+            }
+        }
     }
 
     void Play()
@@ -38,9 +60,12 @@ public class ChessSettingsScript : MonoBehaviour
 
     public void Join()
     {
+        Debug.Log(Client.has_instance);
         if (locked) return;
         string IP = mainMenuCanvasManager.JoinIPInput.text;
         Client.getInstance(true).hierachy.Hierachy.Add(new ClientPacketHandler());
+        // Client.getInstance().ClientInfoUpdateAction = () => Debug.Log(Client.getInstance().ClientInfo);
+        Client.getInstance().DisconnectAction = PlayerKicked;
         Client.getInstance().Connect(IP, "", "", WaitForSide, JoinFailed);
         mainMenuCanvasManager.JoinInfoString = "Connecting...";
         locked = true;
@@ -123,9 +148,11 @@ public class ChessSettingsScript : MonoBehaviour
         Server.getInstance().SendMessage(0, SetClientSidePacket.Build(0, Mathf.Abs(HostSide - 1)));
         Server.getInstance().AcceptingClients = true;
         // Server.getInstance().RecieveUpdateAction = () => Debug.Log(Server.getInstance().RecieveThreadInfo);
+
         Client.getInstance(true).ConnectThreaded("127.0.0.1");
         // Client.getInstance().SendUpdateAction = () => Debug.Log(Client.getInstance().SendThreadInfo);
         Client.getInstance().hierachy.Hierachy.Add(new ClientPacketHandler());
+
         Server.getInstance().AcceptingClients = false;
         if (HostSide == 0)
         {
@@ -150,6 +177,12 @@ public class ChessSettingsScript : MonoBehaviour
         locked = false;
     }
 
+    void PlayerKicked(string reason)
+    {
+        QuitToMenuReason = reason;
+        QuitToMenuNextFrame = true;
+    }
+
     public void AiVsAi()
     {
         if (locked) return;
@@ -161,8 +194,17 @@ public class ChessSettingsScript : MonoBehaviour
     {
         Debug.Log("Quit");
         if (turnHandlers[0] is not null) { turnHandlers[0].Cleanup(); }
-
         if (turnHandlers[1] is not null) { turnHandlers[1].Cleanup(); }
+    }
+
+    void QuitToMainMenu(string reason)
+    {
+        FindObjectOfType<QuitReason>().reason = reason;
+        if (Server.has_instance) { Server.getInstance().Stop(); }
+        if (Client.has_instance) { Client.getInstance().Stop(); }
+        OnApplicationQuit();
+        Destroy(gameObject);
+        SceneManager.LoadScene(0);
     }
 
     public void Update()
@@ -171,6 +213,10 @@ public class ChessSettingsScript : MonoBehaviour
         {
             if (JoinSide != -1) { JoinSuccessful(); }
             if (PlayerHasJoined) { HostSuccessful(); } 
+        }
+        if (QuitToMenuNextFrame)
+        {
+            QuitToMainMenu(QuitToMenuReason);
         }
     }
 }

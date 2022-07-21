@@ -25,7 +25,7 @@ public class DefaultClientPacketHandler : PacketHandlerParent
     {
         ServerKickPacket kickPacket = new ServerKickPacket(packet);
         ClientLogger.ClientLog("Server kicked client, reason: " + kickPacket.Reason);
-        Client.getInstance().Disconnect();
+        Client.getInstance().Disconnect(kickPacket.Reason);
     }
 
     public static void PlayerInformationUpdate(Packet packet)

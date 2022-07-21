@@ -247,7 +247,7 @@ public class Server : ServerClientParent
                 if (!AcceptingClients)
                 {
                     Handler.Send(
-                        ServerKickPacket.Build(0, "Server not accepting clients at this time")
+                        ServerKickPacket.Build(0, "Server is not accepting clients at this time")
                     );
                     ServerLogger.AC("SERVER: Client kicked - not accepting clients");
                     continue;
@@ -559,16 +559,16 @@ public class Server : ServerClientParent
     {
         ServerLogger.ServerLog("Server Shutting Down");
         stopping = true;
-        try { Handler.Shutdown(SocketShutdown.Both); } catch (Exception e) { Debug.Log(e); }
-        try { listener.Shutdown(SocketShutdown.Both); } catch (Exception e) { Debug.Log(e); }
+        try { Handler.Shutdown(SocketShutdown.Both); } catch (Exception e) { }//Debug.Log(e); }
+        try { listener.Shutdown(SocketShutdown.Both); } catch (Exception e) { }//Debug.Log(e); }
         Thread.Sleep(5);
-        try { AcceptClientThread.Abort(); } catch (Exception e) { Debug.Log(e); }
-        try { RecieveThread.Abort(); } catch (Exception e) { Debug.Log(e); }
-        try { SendThread.Abort(); } catch (Exception e) { Debug.Log(e); }
+        try { AcceptClientThread.Abort(); } catch (Exception e) { }//Debug.Log(e); }
+        try { RecieveThread.Abort(); } catch (Exception e) { }//Debug.Log(e); }
+        try { SendThread.Abort(); } catch (Exception e) { }//Debug.Log(e); }
         foreach (ServerPlayer player in Players.Values)
         {
-            try { player.Handler.Send(ServerKickPacket.Build(0, "Server shutting down")); } catch (Exception e) { Debug.Log(e); }
-            try { player.Handler.Shutdown(SocketShutdown.Both); } catch (Exception e) { Debug.Log(e); }
+            try { player.Handler.Send(ServerKickPacket.Build(0, "Server shutting down")); } catch (Exception e) { }//Debug.Log(e); }
+            try { player.Handler.Shutdown(SocketShutdown.Both); } catch (Exception e) { }//Debug.Log(e); }
         }
         instance = null;
         is_running = false;

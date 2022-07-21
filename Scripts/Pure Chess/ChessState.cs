@@ -250,12 +250,8 @@ public class ChessState
     }
 
     // Calls OnMove
-    public void FullMoveBoardPiece(Vector2Int from, Vector2Int to, bool jump = false, bool? check = null)
+    public void FullMoveBoardPiece(Vector2Int from, Vector2Int to, bool jump = false)
     {
-        if (check is not null)
-        {
-            Check = MathP.BoolToInt((bool) check);
-        }
         LightMoveBoardPiece(from, to, jump);
         Board[to.x, to.y].OnMove(this);
         last_move = new Tuple<Vector2Int, Vector2Int>(from, to);

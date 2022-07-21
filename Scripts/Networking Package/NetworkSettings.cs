@@ -11,11 +11,14 @@ public static class NetworkSettings
 
     public static void MainThreadStart()
     {
+        /*
         LOG_PATH =
             Application.persistentDataPath
             + "/NetworkLog_"
             + DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss")
             + ".log";
+        */
+
         VERSION = Application.version;
 
         Debug.Log("Logging to: " + LOG_PATH);
