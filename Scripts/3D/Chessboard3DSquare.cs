@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -50,6 +51,7 @@ public class Chessboard3DSquare : MonoBehaviour
         float target_delta = target_displacement + 1 - transform.position.y;
         if (target_delta == 0) { return; }
         transform.position += Vector3.up * Mathf.Log(target_delta, 2) * Time.deltaTime * 10;
+        transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -10, 10), transform.position.z);
 
         if (appearanceManager3D.highlighted[position.x, position.y] != highlighted)
         {

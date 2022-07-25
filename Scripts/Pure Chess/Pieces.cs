@@ -37,8 +37,8 @@ namespace ChessPieces
                 Piece left_piece = state.GetPieceAtPosition(new Vector2Int(0, rook_y));
                 if (left_piece is not null && left_piece.GetType() == typeof(Rook) && ((Rook)left_piece).move_count == 0)
                 {
-                    var temp_moves = PieceUtil.RaycastMoves(new Vector2Int(-1, 0), position, state, 2, side, false);
-                    if (temp_moves.Count > 1)
+                    var temp_moves = PieceUtil.RaycastMoves(new Vector2Int(-1, 0), position, state, 3, side, false);
+                    if (temp_moves.Count > 2)
                     {
                         moves.Add(temp_moves[1]);
                     }
@@ -289,7 +289,6 @@ namespace ChessPieces
             moves.AddRange(PieceUtil.RaycastMoves(new Vector2Int(2, -1), position, state, 1, side, true));
             moves.AddRange(PieceUtil.RaycastMoves(new Vector2Int(1, 2), position, state, 1, side, true));
             moves.AddRange(PieceUtil.RaycastMoves(new Vector2Int(1, -2), position, state, 1, side, true));
-            moves.AddRange(PieceUtil.RaycastMoves(new Vector2Int(1, 2), position, state, 1, side, true));
             moves.AddRange(PieceUtil.RaycastMoves(new Vector2Int(-1, -2), position, state, 1, side, true));
             moves.AddRange(PieceUtil.RaycastMoves(new Vector2Int(-1, 2), position, state, 1, side, true));
             moves.AddRange(PieceUtil.RaycastMoves(new Vector2Int(-2, 1), position, state, 1, side, true));

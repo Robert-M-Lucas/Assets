@@ -47,7 +47,8 @@ public class ChessSettingsScript : MonoBehaviour
 
     void Play()
     {
-        SceneManager.LoadScene(1);
+        locked = true;
+        mainMenuCanvasManager.StartSceneChange();
         locked = false;
     }
 

@@ -270,7 +270,7 @@ public class Server : ServerClientParent
                             0,
                             "Wrong Version:\nServer: "
                                 + NetworkSettings.VERSION.ToString()
-                                + "   Client (You): "
+                                + "| Client (You): "
                                 + initPacket.Version
                         )
                     );
@@ -495,7 +495,8 @@ public class Server : ServerClientParent
             while (!stopping)
             {
                 if (ContentQueue.IsEmpty)
-                { //Thread.Sleep(2);
+                {   
+                    Thread.Sleep(2);
                     continue;
                 } // Nothing recieved
 

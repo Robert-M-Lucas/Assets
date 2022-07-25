@@ -227,6 +227,7 @@ public class Client : ServerClientParent
         }
     }
 
+
     private void ReadCallback(IAsyncResult ar)
     {
         String content = String.Empty;
@@ -297,7 +298,8 @@ public class Client : ServerClientParent
             while (!stopping)
             {
                 if (ContentQueue.IsEmpty)
-                { //Thread.Sleep(2);
+                {   
+                    Thread.Sleep(2);
                     continue;
                 } // Nothing recieved
 
