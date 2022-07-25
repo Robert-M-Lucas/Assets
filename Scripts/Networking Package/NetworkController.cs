@@ -9,7 +9,7 @@ public static class NetworkController
         if (Server.has_instance)
         {
             Logger.Log("[Network Controller] Shutting down server");
-            Server.getInstance().Stop();
+            Server.getInstance().Stop(null);
         }
         else
         {

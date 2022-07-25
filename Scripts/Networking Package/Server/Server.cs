@@ -119,11 +119,18 @@ public class Server : ServerClientParent
         return Players[playerIDCounter - 1];
     }
 
-    void RemovePlayer(int playerID, string reason)
+    public void RemovePlayer(int playerID, string reason)
     {
         // TODO: Figure out a way to send a kick packet to a player despite them being disconnected immediately
-        Players[playerID].Handler.Send(ServerKickPacket.Build(0, reason));
-        Players[playerID].Handler.Shutdown(SocketShutdown.Both);
+        try
+        {
+            Players[playerID].Handler.Send(ServerKickPacket.Build(0, reason));
+            Players[playerID].Handler.Shutdown(SocketShutdown.Both);
+        }
+        catch (Exception e)
+        {
+
+        }
         Players.Remove(playerID);
 
         foreach (int otherPlayerID in Players.Keys)
@@ -551,12 +558,7 @@ public class Server : ServerClientParent
         }
     }
 
-    ~Server()
-    {
-        Stop();
-    }
-
-    public void Stop()
+    public void Stop(string reason)
     {
         ServerLogger.ServerLog("Server Shutting Down");
         stopping = true;
@@ -568,7 +570,9 @@ public class Server : ServerClientParent
         try { SendThread.Abort(); } catch (Exception e) { }//Debug.Log(e); }
         foreach (ServerPlayer player in Players.Values)
         {
-            try { player.Handler.Send(ServerKickPacket.Build(0, "Server shutting down")); } catch (Exception e) { }//Debug.Log(e); }
+            if (reason is null) try { player.Handler.Send(ServerKickPacket.Build(0, "Server shutting down. No reason given")); } catch (Exception e) { }//Debug.Log(e); }
+            else try { player.Handler.Send(ServerKickPacket.Build(0, $"Server shutting down. Reason: {reason}")); } catch (Exception e) { }//Debug.Log(e); }
+
             try { player.Handler.Shutdown(SocketShutdown.Both); } catch (Exception e) { }//Debug.Log(e); }
         }
         instance = null;

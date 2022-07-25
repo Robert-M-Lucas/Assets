@@ -2666,18 +2666,18 @@ PrefabInstance:
     - target: {fileID: 3544846313511967054, guid: 132c767dff626ea4bbe4dd806e32ad64, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1598389399}
+      objectReference: {fileID: 1840784643}
     - target: {fileID: 3544846313511967054, guid: 132c767dff626ea4bbe4dd806e32ad64, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3544846313511967054, guid: 132c767dff626ea4bbe4dd806e32ad64, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Join
+      value: ShowJoinScreen
       objectReference: {fileID: 0}
     - target: {fileID: 3544846313511967054, guid: 132c767dff626ea4bbe4dd806e32ad64, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ChessSettingsScript, Assembly-CSharp
+      value: MainMenuCanvasManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3544846313511967054, guid: 132c767dff626ea4bbe4dd806e32ad64, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -4398,7 +4398,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30.05
+  m_fontSize: 29.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

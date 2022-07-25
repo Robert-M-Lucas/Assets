@@ -339,11 +339,6 @@ public class Client : ServerClientParent
         }
     }
 
-    ~Client()
-    {
-        Stop();
-    }
-
     public void Disconnect(string reason = "")
     {
         try
@@ -361,6 +356,7 @@ public class Client : ServerClientParent
     public void Stop()
     {
         ClientLogger.ClientLog("Client Shutting Down");
+        try { Handler.Send(ClientDisconnectPacket.Build(0)); } catch (Exception e) { }
         stopping = true;
         Thread.Sleep(5);
         try

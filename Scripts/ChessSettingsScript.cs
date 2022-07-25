@@ -134,6 +134,7 @@ public class ChessSettingsScript : MonoBehaviour
         mainMenuCanvasManager.ShowHostScreen();
         Server.getInstance(true).AcceptingClients = true;
         Server.getInstance().OnPlayerJoinAction = () => { PlayerHasJoined = true; };
+        Server.getInstance().OnPlayerLeaveAction = PlayerLeftHost;
         Server.getInstance().hierachy.Hierachy.Add(new ServerPacketHandler());
         Server.getInstance().Start();
     }
@@ -171,7 +172,7 @@ public class ChessSettingsScript : MonoBehaviour
     public void CancelHost()
     {
         if (!locked) { return; }
-        Server.getInstance().Stop();
+        Server.getInstance().Stop("Host force stop");
         mainMenuCanvasManager.HideHostScreen();
         PlayerHasJoined = false;
         HostSide = -1;
@@ -198,10 +199,16 @@ public class ChessSettingsScript : MonoBehaviour
         if (turnHandlers[1] is not null) { turnHandlers[1].Cleanup(); }
     }
 
+    void PlayerLeftHost()
+    {
+        QuitToMenuNextFrame = true;
+        QuitToMenuReason = "Opponent left";
+    }
+
     void QuitToMainMenu(string reason)
     {
         FindObjectOfType<QuitReason>().reason = reason;
-        if (Server.has_instance) { Server.getInstance().Stop(); }
+        if (Server.has_instance) { Server.getInstance().Stop("Host force stop"); }
         if (Client.has_instance) { Client.getInstance().Stop(); }
         OnApplicationQuit();
         Destroy(gameObject);

@@ -31,7 +31,7 @@ public class OnlineClientTurnHandler : TurnHandlerInterface
     }
 
     public override void Cleanup() {
-        if (Server.has_instance) { Server.getInstance().Stop(); }
+        if (Server.has_instance) { Server.getInstance().Stop("Host force stop"); }
         if (Client.has_instance) { Client.getInstance().Stop(); }
     }
 }

@@ -16,6 +16,8 @@ Ping packet
 4\ClientPing
 5\ServerPing
 
+7\ClientDisconnect
+
 *****************************************
 
 100 - 199: Theses are test packets

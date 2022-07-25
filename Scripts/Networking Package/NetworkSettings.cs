@@ -19,6 +19,8 @@ public static class NetworkSettings
             + ".log";
         */
 
+        LOG_PATH = Application.persistentDataPath + "/NETWORK_LOG.log";
+
         VERSION = Application.version;
 
         Debug.Log("Logging to: " + LOG_PATH);
