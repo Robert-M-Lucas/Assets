@@ -21,17 +21,17 @@ public class ChessManager : MonoBehaviour
 
     public void ApplyVisualUpdate(VisualUpdate update)
     {
-        if (update.code == 0)
+        if (update.Code == 0)
         {
-            pieceManager3D.PlacePiece(update.piece_name, update.side, update.position);
+            pieceManager3D.PlacePiece(update.PieceName, update.Side, update.Position);
         }
-        else if (update.code == 1)
+        else if (update.Code == 1)
         {
-            pieceManager3D.RemovePiece(update.position);
+            pieceManager3D.RemovePiece(update.Position);
         }
         else
         {
-            pieceManager3D.MovePiece(update.position, update.position2, update.jump);
+            pieceManager3D.MovePiece(update.Position, update.Position2, update.Jump);
         }
     }
     

@@ -15,6 +15,7 @@ public class InputManager : MonoBehaviour
     public AppearanceManager3D appearanceManager3D;
     public Chessboard3DPieceManager chessboard3DPieceManager;
     public ChessManagerInterface chessManagerInterface;
+    public SoundManager soundManager;
 
     // Internal
 
@@ -63,9 +64,12 @@ public class InputManager : MonoBehaviour
             PerspectiveMode = !PerspectiveMode;
             chessboard3DPieceManager.UpdateTheme();
 
+            chessboard3DPieceManager.ShowText(!PerspectiveMode);
+
             if (!PerspectiveMode)
             {
                 HandleNoHit();
+                
             }
         }
 

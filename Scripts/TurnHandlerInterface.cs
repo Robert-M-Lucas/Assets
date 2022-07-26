@@ -23,26 +23,26 @@ public abstract class TurnHandlerInterface
 
 public class RandomTurnHandler: TurnHandlerInterface
 {
-    const float min_time = 0.2f;
+    const float MIN_TIME = 0.2f;
 
-    float start_time;
+    float _start_time;
 
-    ChessState State;
+    ChessState _state;
 
     public override void StartFindingMove(ChessState state) 
     {
-        State = state;
-        start_time = Time.time;
+        _state = state;
+        _start_time = Time.time;
     }
 
     public override bool MoveAvailable()
     {
-        return !(Time.time < start_time + min_time);
+        return !(Time.time < _start_time + MIN_TIME);
     }
 
     public override Tuple<Vector2Int, Vector2Int> GetMove()
     {
-        var all_pieces_to_move = Enumerable.ToList(State.all_possible_moves.Keys);
+        var all_pieces_to_move = Enumerable.ToList(_state.all_possible_moves.Keys);
 
         retry:
 
@@ -50,7 +50,7 @@ public class RandomTurnHandler: TurnHandlerInterface
 
         var to_move = all_pieces_to_move[Random.Range(0, all_pieces_to_move.Count-1)];
 
-        var all_moves = State.all_possible_moves[to_move];
+        var all_moves = _state.all_possible_moves[to_move];
 
         if (all_moves.Count == 0)
         {

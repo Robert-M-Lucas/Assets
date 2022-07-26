@@ -24,13 +24,13 @@ public struct Packet
     public int UID;
     public int RID;
     public int From;
-    public List<byte[]> contents;
+    public List<byte[]> Contents;
 
-    public Packet(int _UID, int _RID, List<byte[]> _contents, int from = -1)
+    public Packet(int uid, int rid, List<byte[]> contents, int from = -1)
     {
-        UID = _UID;
-        RID = _RID;
-        contents = _contents;
+        UID = uid;
+        RID = rid;
+        Contents = contents;
         From = from;
     }
 }
@@ -49,7 +49,7 @@ public class PacketMissingAttributeException : Exception
 //UID, RID, Data
 public static class PacketBuilder
 {
-    private static Encoding encoder = new UTF8Encoding();
+    private static Encoding _encoder = new UTF8Encoding();
 
     public const int PacketLenLen = 4;
     public const int UIDLen = 4;
@@ -99,7 +99,7 @@ public static class PacketBuilder
 
     public static byte[] ByteEncode(string input)
     {
-        return encoder.GetBytes(input);
+        return _encoder.GetBytes(input);
     }
 
     public static Packet Decode(byte[] data, int from = -1)

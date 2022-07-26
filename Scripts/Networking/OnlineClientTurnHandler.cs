@@ -9,9 +9,9 @@ using ChessPieces;
 
 public class OnlineClientTurnHandler : TurnHandlerInterface
 {
-    public bool waiting_for_move = true;
+    public bool WaitingForMove = true;
 
-    public Tuple<Vector2Int, Vector2Int> move = null;
+    public Tuple<Vector2Int, Vector2Int> Move = null;
 
     public override void StartFindingMove(ChessState state) 
     { 
@@ -19,15 +19,15 @@ public class OnlineClientTurnHandler : TurnHandlerInterface
         {
             Client.getInstance().SendMessage(ClientSendMovePacket.Build(0, state.last_move.Item1.x, state.last_move.Item1.y, state.last_move.Item2.x, state.last_move.Item2.y));
         }
-        waiting_for_move = true;
+        WaitingForMove = true;
     }
 
 
-    public override bool MoveAvailable() { return !waiting_for_move; }
+    public override bool MoveAvailable() { return !WaitingForMove; }
 
     public override Tuple<Vector2Int, Vector2Int> GetMove()
     {
-        return move;
+        return Move;
     }
 
     public override void Cleanup() {

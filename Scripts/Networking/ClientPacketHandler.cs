@@ -30,7 +30,7 @@ public class ClientPacketHandler : PacketHandlerParent
     {
         ServerSendMovePacket clientSidePacket = new ServerSendMovePacket(packet);
         // Debug.Log($"Recieved move information: {clientSidePacket.fromX} {clientSidePacket.fromY} {clientSidePacket.toX} {clientSidePacket.toY}");
-        clientTurnHandler.move = new Tuple<Vector2Int, Vector2Int>(new Vector2Int(clientSidePacket.fromX, clientSidePacket.fromY), new Vector2Int(clientSidePacket.toX, clientSidePacket.toY));
-        clientTurnHandler.waiting_for_move = false;
+        clientTurnHandler.Move = new Tuple<Vector2Int, Vector2Int>(new Vector2Int(clientSidePacket.fromX, clientSidePacket.fromY), new Vector2Int(clientSidePacket.toX, clientSidePacket.toY));
+        clientTurnHandler.WaitingForMove = false;
     }
 }

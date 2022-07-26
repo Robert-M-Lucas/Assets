@@ -21,12 +21,14 @@ public class MainMenuCanvasManager : MonoBehaviour
     public TMP_Text LocalIP;
     public TMP_Text PublicIP;
 
+    public TMP_Text VersionText;
+
     bool PublicIPShown = false;
     string PublicIPString = null;
 
     public CanvasGroup canvasGroup;
-    float scene_change_progress = 0;
-    bool scene_change = false;
+    float _scene_change_progress = 0;
+    bool _scene_change = false;
     public float SceneChangeTime = 1;
 
     // Start is called before the first frame update
@@ -34,6 +36,8 @@ public class MainMenuCanvasManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        VersionText.text = "v" + Application.version;
 
         try
         {
@@ -97,7 +101,7 @@ public class MainMenuCanvasManager : MonoBehaviour
 
     public void StartSceneChange()
     {
-        scene_change = true;
+        _scene_change = true;
     }
 
     // Update is called once per frame
@@ -111,15 +115,15 @@ public class MainMenuCanvasManager : MonoBehaviour
             PublicIPShown = true;
         }
 
-        if (scene_change)
+        if (_scene_change)
         {
-            scene_change_progress += Time.deltaTime / SceneChangeTime;
-            if (scene_change_progress > 1)
+            _scene_change_progress += Time.deltaTime / SceneChangeTime;
+            if (_scene_change_progress > 1)
             {
                 SceneManager.LoadScene(1);
                 return;
             }
-            canvasGroup.alpha = 1 - scene_change_progress;
+            canvasGroup.alpha = 1 - _scene_change_progress;
         }
     }
 }

@@ -8,6 +8,8 @@ public class ChessManagerInterface : MonoBehaviour
     [Header("References")]
     public ChessManager chessManager;
     public CanvasManager canvasManager;
+    public InputManager inputManager;
+    public SoundManager soundManager;
 
     [HideInInspector]
     public List<Tuple<Vector2Int, bool>> possibleMoves = new List<Tuple<Vector2Int, bool>>();
@@ -27,6 +29,11 @@ public class ChessManagerInterface : MonoBehaviour
         if (chessSettings.turnHandlers[1] is not null)
         {
             chessSettings.turnHandlers[MathP.BoolToInt(chessManager.State.turn)].StartFindingMove(chessManager.State);
+        }
+
+        if (chessSettings.turnHandlers[1] is not null && chessSettings.turnHandlers[0] is null)
+        {
+            inputManager.cameraControl.RotateCamera(new Vector2(180, 0));
         }
     }
 
@@ -68,6 +75,7 @@ public class ChessManagerInterface : MonoBehaviour
         // Tile reselected
         if (new_selected == Selected || (Selected != UNSELECTED && !MoveExists(new_selected, out _)))
         {
+            soundManager.PlayOffClick();
             Selected = UNSELECTED;
             possibleMoves.Clear();
             return;
@@ -89,6 +97,7 @@ public class ChessManagerInterface : MonoBehaviour
         possibleMoves = chessManager.GetMovesFromAllMoves(new_selected);
         if (possibleMoves.Count > 0)
         {
+            soundManager.PlayOnClick();
             Selected = new_selected;
         }
     }
@@ -103,6 +112,8 @@ public class ChessManagerInterface : MonoBehaviour
         {
             chessSettings.turnHandlers[MathP.BoolToInt(chessManager.State.turn)].StartFindingMove(chessManager.State);
         }
+
+        soundManager.PlayPieceMoveSound(new Vector3(pos2.x - 3.5f, 0, 7 - (pos2.y + 3.5f)));
     }
 
     public void Update()

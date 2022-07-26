@@ -9,7 +9,7 @@ public class ServerKickPacket {
     public string Reason;
     public ServerKickPacket(Packet packet){
         RID = packet.RID;
-        Reason = ASCIIEncoding.ASCII.GetString(packet.contents[0]);
+        Reason = ASCIIEncoding.ASCII.GetString(packet.Contents[0]);
     }
 
     public static byte[] Build(int _RID, string _Reason) {

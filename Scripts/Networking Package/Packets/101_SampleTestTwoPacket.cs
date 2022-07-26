@@ -12,10 +12,10 @@ public class SampleTestTwoPacket {
     public string ArgFour;
     public SampleTestTwoPacket(Packet packet){
         RID = packet.RID;
-        ArgOne = BitConverter.ToInt32(packet.contents[0]);
-        ArgTwo = BitConverter.ToDouble(packet.contents[1]);
-        ArgThree = ASCIIEncoding.ASCII.GetString(packet.contents[2]);
-        ArgFour = ASCIIEncoding.ASCII.GetString(packet.contents[3]);
+        ArgOne = BitConverter.ToInt32(packet.Contents[0]);
+        ArgTwo = BitConverter.ToDouble(packet.Contents[1]);
+        ArgThree = ASCIIEncoding.ASCII.GetString(packet.Contents[2]);
+        ArgFour = ASCIIEncoding.ASCII.GetString(packet.Contents[3]);
     }
 
     public static byte[] Build(int _RID, int _ArgOne, double _ArgTwo, string _ArgThree, string _ArgFour="defaultVal") {

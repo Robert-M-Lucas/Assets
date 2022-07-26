@@ -6,5 +6,5 @@ public class ServerClientParent
 {
     public List<PacketHandlerParent> DefaultHierachy = new List<PacketHandlerParent>();
 
-    public bool stopping = false;
+    public bool Stopping = false;
 }

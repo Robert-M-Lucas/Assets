@@ -9,37 +9,37 @@ namespace ChessPieces
 {
     public static class PieceFactory
     {
-        public static Piece GetPiece(string piece_string, Vector2Int init_position, bool side)
+        public static Piece GetPiece(string pieceString, Vector2Int initPosition, bool side)
         {
-            switch (piece_string)
+            switch (pieceString)
             {
                 case "King":
-                    return new King(init_position, side);
+                    return new King(initPosition, side);
                 case "Queen":
-                    return new Queen(init_position, side);
+                    return new Queen(initPosition, side);
                 case "Bishop":
-                    return new Bishop(init_position, side);
+                    return new Bishop(initPosition, side);
                 case "Rook":
-                    return new Rook(init_position, side);
+                    return new Rook(initPosition, side);
                 case "Knight":
-                    return new Knight(init_position, side);
+                    return new Knight(initPosition, side);
                 case "Pawn":
-                    return new Pawn(init_position, side);
+                    return new Pawn(initPosition, side);
                 default:
-                    throw new ArgumentException($"Invalid piece: {piece_string}");
+                    throw new ArgumentException($"Invalid piece: {pieceString}");
             }
         }
     }
 
     public abstract class Piece
     {
-        public Vector2Int position;
-        public bool side;
+        public Vector2Int Position;
+        public bool Side;
 
-        public Piece(Vector2Int init_position, bool side)
+        public Piece(Vector2Int initPosition, bool side)
         {
-            position = init_position;
-            this.side = side;
+            Position = initPosition;
+            this.Side = side;
         }
 
         public abstract float GetValue();
@@ -67,11 +67,11 @@ namespace ChessPieces
             return moves;
         }
 
-        public static List<Vector2Int> RaycastMoves(Vector2Int step, Vector2Int position, ChessState state, int max_repeats, bool side, bool attacking = true, bool exclusive_attack = false)
+        public static List<Vector2Int> RaycastMoves(Vector2Int step, Vector2Int position, ChessState state, int maxRepeats, bool side, bool attacking = true, bool exclusiveAttack = false)
         {
             List<Vector2Int> moves = new List<Vector2Int>();
 
-            for (int i = 0; i < max_repeats; i++)
+            for (int i = 0; i < maxRepeats; i++)
             {
                 position += step;
 
@@ -80,14 +80,14 @@ namespace ChessPieces
                 Piece piece_at_pos = state.GetPieceAtPosition(position);
                 if (piece_at_pos is not null)
                 {
-                    if (piece_at_pos.side == side) { break; }
+                    if (piece_at_pos.Side == side) { break; }
                     else
                     {
                         if (attacking) { moves.Add(position); break; }
                         break;
                     }
                 }
-                else if (exclusive_attack)
+                else if (exclusiveAttack)
                 {
                     break;
                 }

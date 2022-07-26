@@ -32,15 +32,15 @@ public class ChessSettingsScript : MonoBehaviour
         QuitReason[] quitReasons = FindObjectsOfType<QuitReason>();
         foreach (QuitReason quitReason in quitReasons)
         {
-            if (quitReason.claimed && quitReason.reason != "")
+            if (quitReason.Claimed && quitReason.Reason != "")
             {
                 mainMenuCanvasManager.ShowJoinScreen();
-                mainMenuCanvasManager.JoinInfoString = quitReason.reason;
+                mainMenuCanvasManager.JoinInfoString = quitReason.Reason;
                 Destroy(quitReason.gameObject);
             }
             else
             {
-                quitReason.claimed = true;
+                quitReason.Claimed = true;
             }
         }
     }
@@ -89,12 +89,12 @@ public class ChessSettingsScript : MonoBehaviour
             turnHandlers = new TurnHandlerInterface[] { new OnlineClientTurnHandler(), null };
             ClientPacketHandler.clientTurnHandler = (OnlineClientTurnHandler)turnHandlers[0];
         }
+        JoinSide = -1;
         Play();
     }
 
     public void JoinFailed(string reason)
     {
-        Debug.Log(reason);
         locked = false;
         mainMenuCanvasManager.JoinInfoString = "Join failed due to:\n" + reason;
         Client.getInstance().Stop();
@@ -173,6 +173,7 @@ public class ChessSettingsScript : MonoBehaviour
     {
         if (!locked) { return; }
         Server.getInstance().Stop("Host force stop");
+        Client.getInstance()?.Stop();
         mainMenuCanvasManager.HideHostScreen();
         PlayerHasJoined = false;
         HostSide = -1;
@@ -205,20 +206,52 @@ public class ChessSettingsScript : MonoBehaviour
         QuitToMenuReason = "Opponent left";
     }
 
-    void QuitToMainMenu(string reason)
+    public void QuitToMainMenu(string reason = null)
     {
-        FindObjectOfType<QuitReason>().reason = reason;
+        PlayerHasJoined = false;
+        JoinSide = -1;
+        locked = false;
+        QuitReason quitReason = FindObjectOfType<QuitReason>();
+        if (reason is null)
+        {
+            DestroyImmediate(quitReason.gameObject);
+        }
+        else
+        {
+            quitReason.Reason = reason;
+        }
+        
         if (Server.has_instance) { Server.getInstance().Stop("Host force stop"); }
         if (Client.has_instance) { Client.getInstance().Stop(); }
         OnApplicationQuit();
-        Destroy(gameObject);
+        FadeOutScript fadeOut = FindObjectOfType<FadeOutScript>();
+        if (fadeOut is not null)
+        {
+            fadeOut.Fade = true;
+            // StartCoroutine(DelayedMenuChange());
+        }
+        else
+        {
+            SceneManager.LoadScene(0);
+        }
+
+        DestroyImmediate(gameObject);
+    }
+
+    /*
+    IEnumerator DelayedMenuChange()
+    {
+        yield return new WaitForSeconds(1);
+        Debug.Log("Load scene?");
         SceneManager.LoadScene(0);
     }
+    */
 
     public void Update()
     {
         if (locked)
         {
+            Debug.Log(JoinSide);
             if (JoinSide != -1) { JoinSuccessful(); }
             if (PlayerHasJoined) { HostSuccessful(); } 
         }

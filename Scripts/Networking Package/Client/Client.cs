@@ -190,7 +190,7 @@ public class Client : ServerClientParent
     {
         try
         {
-            while (!stopping)
+            while (!Stopping)
             {
                 if (!SendQueue.IsEmpty)
                 {
@@ -295,7 +295,7 @@ public class Client : ServerClientParent
     {
         try
         {
-            while (!stopping)
+            while (!Stopping)
             {
                 if (ContentQueue.IsEmpty)
                 {   
@@ -357,7 +357,7 @@ public class Client : ServerClientParent
     {
         ClientLogger.ClientLog("Client Shutting Down");
         try { Handler.Send(ClientDisconnectPacket.Build(0)); } catch (Exception e) { }
-        stopping = true;
+        Stopping = true;
         Thread.Sleep(5);
         try
         {
@@ -378,10 +378,11 @@ public class Client : ServerClientParent
         try
         {
             Handler.Shutdown(SocketShutdown.Both);
+            Handler.Close();
         }
         catch (Exception e)
         {
-            // Debug.Log(e);
+            Debug.Log(e);
         }
         instance = null;
         connected = false;

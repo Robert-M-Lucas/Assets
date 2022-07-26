@@ -9,7 +9,7 @@ public class ServerConnectAcceptPacket {
     public int GivenUID;
     public ServerConnectAcceptPacket(Packet packet){
         RID = packet.RID;
-        GivenUID = BitConverter.ToInt32(packet.contents[0]);
+        GivenUID = BitConverter.ToInt32(packet.Contents[0]);
     }
 
     public static byte[] Build(int _RID, int _GivenUID) {

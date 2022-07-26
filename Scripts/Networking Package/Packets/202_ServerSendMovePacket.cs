@@ -12,10 +12,10 @@ public class ServerSendMovePacket {
     public int toY;
     public ServerSendMovePacket(Packet packet){
         RID = packet.RID;
-        fromX = BitConverter.ToInt32(packet.contents[0]);
-        fromY = BitConverter.ToInt32(packet.contents[1]);
-        toX = BitConverter.ToInt32(packet.contents[2]);
-        toY = BitConverter.ToInt32(packet.contents[3]);
+        fromX = BitConverter.ToInt32(packet.Contents[0]);
+        fromY = BitConverter.ToInt32(packet.Contents[1]);
+        toX = BitConverter.ToInt32(packet.Contents[2]);
+        toY = BitConverter.ToInt32(packet.Contents[3]);
     }
 
     public static byte[] Build(int _RID, int _fromX, int _fromY, int _toX, int _toY) {

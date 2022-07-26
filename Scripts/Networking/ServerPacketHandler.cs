@@ -18,8 +18,8 @@ public class ServerPacketHandler : PacketHandlerParent
 
     public static void OnMoveRecieve(Packet packet)
     {
-        ClientSendMovePacket movePacket = new ClientSendMovePacket(packet);
+        ClientSendMovePacket move_packet = new ClientSendMovePacket(packet);
         // Debug.Log($"Forwarding move information: {movePacket.fromX} {movePacket.fromY} {movePacket.toX} {movePacket.toY}");
-        Server.getInstance().SendMessage(Mathf.Abs(packet.From - 1), ServerSendMovePacket.Build(0, movePacket.fromX, movePacket.fromY, movePacket.toX, movePacket.toY));
+        Server.getInstance().SendMessage(Mathf.Abs(packet.From - 1), ServerSendMovePacket.Build(0, move_packet.fromX, move_packet.fromY, move_packet.toX, move_packet.toY));
     }
 }

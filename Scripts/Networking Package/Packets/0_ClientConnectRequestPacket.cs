@@ -11,9 +11,9 @@ public class ClientConnectRequestPacket {
     public string Password;
     public ClientConnectRequestPacket(Packet packet){
         RID = packet.RID;
-        Name = ASCIIEncoding.ASCII.GetString(packet.contents[0]);
-        Version = ASCIIEncoding.ASCII.GetString(packet.contents[1]);
-        Password = ASCIIEncoding.ASCII.GetString(packet.contents[2]);
+        Name = ASCIIEncoding.ASCII.GetString(packet.Contents[0]);
+        Version = ASCIIEncoding.ASCII.GetString(packet.Contents[1]);
+        Password = ASCIIEncoding.ASCII.GetString(packet.Contents[2]);
     }
 
     public static byte[] Build(int _RID, string _Name, string _Version, string _Password="") {

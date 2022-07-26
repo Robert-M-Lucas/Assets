@@ -14,11 +14,11 @@ public class ServerPlayer : ServerPlayerExtraData
 
     public string Name;
 
-    public byte[] buffer = new byte[1024];
-    public byte[] long_buffer = new byte[1024];
-    public int current_packet_length = -1;
-    public int long_buffer_size = 0;
-    public StringBuilder sb = new StringBuilder();
+    public byte[] Buffer = new byte[1024];
+    public byte[] LongBuffer = new byte[1024];
+    public int CurrentPacketLength = -1;
+    public int LongBufferSize = 0;
+    public StringBuilder SB = new StringBuilder();
 
     public string GetUniqueString()
     {
@@ -27,8 +27,8 @@ public class ServerPlayer : ServerPlayerExtraData
 
     public void Reset()
     {
-        buffer = new byte[1024];
-        sb = new StringBuilder();
+        Buffer = new byte[1024];
+        SB = new StringBuilder();
     }
 
     public ServerPlayer(Socket handler, int playerID)

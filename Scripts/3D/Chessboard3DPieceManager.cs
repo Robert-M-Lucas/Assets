@@ -59,6 +59,18 @@ public class Chessboard3DPieceManager : MonoBehaviour
         };
     }
 
+    public void ShowText(bool show)
+    {
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                if (pieces_on_board[x, y] is null) { continue; }
+                pieces_on_board[x, y].ShowText(show);
+            }
+        }
+    }
+
     public Vector3 BoardCellToPosition(Vector2Int board_cell)
     {
         return (Vector3.up * appearanceManager.Board[board_cell.x, board_cell.y].transform.localScale.y) / 2;
@@ -97,6 +109,7 @@ public class Chessboard3DPieceManager : MonoBehaviour
         GameObject piece = Instantiate(sourcePiece.gameObject);
         foreach (MeshRenderer m in piece.GetComponentsInChildren<MeshRenderer>())
         {
+            if (m.gameObject.GetComponent<TMPro.TMP_Text>() is not null) { continue; }
             m.material = themeMaterial;
         }
         piece.transform.SetParent(appearanceManager.Board[position.x, position.y].transform);
@@ -105,6 +118,7 @@ public class Chessboard3DPieceManager : MonoBehaviour
         Piece3D newPiece = piece.GetComponent<Piece3D>();
         newPiece.MovingFrom = piece.transform.position;
         newPiece.TargetPosition = piece.transform.position;
+        if (!inputManager.PerspectiveMode) { newPiece.ShowText(true); }
 
         pieces_on_board[position.x, position.y] = newPiece;
         
@@ -160,6 +174,7 @@ public class Chessboard3DPieceManager : MonoBehaviour
                 
                 foreach (MeshRenderer m in pieces_on_board[x, y].gameObject.GetComponentsInChildren<MeshRenderer>())
                 {
+                    if (m.gameObject.GetComponent<TMPro.TMP_Text>() is not null) { continue; }
                     if (pieces_on_board[x, y].PieceColour)
                     {
                         if ((inputManager.PerspectiveMode && !inputManager.EdgeLit) || theme.whiteEdgeMaterial is null)

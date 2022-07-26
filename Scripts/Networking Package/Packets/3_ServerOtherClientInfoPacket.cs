@@ -10,8 +10,8 @@ public class ServerOtherClientInfoPacket {
     public string ClientName;
     public ServerOtherClientInfoPacket(Packet packet){
         RID = packet.RID;
-        ClientUID = BitConverter.ToInt32(packet.contents[0]);
-        ClientName = ASCIIEncoding.ASCII.GetString(packet.contents[1]);
+        ClientUID = BitConverter.ToInt32(packet.Contents[0]);
+        ClientName = ASCIIEncoding.ASCII.GetString(packet.Contents[1]);
     }
 
     public static byte[] Build(int _RID, int _ClientUID, string _ClientName="") {

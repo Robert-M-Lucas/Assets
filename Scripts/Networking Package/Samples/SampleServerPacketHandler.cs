@@ -17,13 +17,13 @@ public class SampleServerPacketHandler : PacketHandlerParent
 
     public static void HandlePacketWithUIDOneHundred(Packet packet)
     {
-        SampleTestPacket sampleTestPacket = new SampleTestPacket(packet); // This packet is defined in Packets.txt
-        ServerLogger.ServerLog(sampleTestPacket.ArgFour);
+        SampleTestPacket sample_test_packet = new SampleTestPacket(packet); // This packet is defined in Packets.txt
+        ServerLogger.ServerLog(sample_test_packet.ArgFour);
     }
 
     public void HandlePacketWithUIDThreeHundred(Packet packet)
     {
-        SampleTestPacket sampleTestPacket = new SampleTestPacket(packet); // This packet is defined in Packets.txt
-        ServerLogger.ServerLog(sampleTestPacket.ArgFour);
+        SampleTestPacket sample_test_packet = new SampleTestPacket(packet); // This packet is defined in Packets.txt
+        ServerLogger.ServerLog(sample_test_packet.ArgFour);
     }
 }

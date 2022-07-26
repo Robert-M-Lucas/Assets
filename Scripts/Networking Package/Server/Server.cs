@@ -12,14 +12,14 @@ using Debug = UnityEngine.Debug;
 
 public class Server : ServerClientParent
 {
-    public string server_password = "";
+    public string ServerPassword = "";
 
     public static bool is_running { private set; get; } = false;
 
     // public bool stopping = false;
 
-    private Socket Handler;
-    private Socket listener;
+    private Socket _handler;
+    private Socket _listener;
 
     public string ServerInfo = "";
     public Action ServerInfoUpdateAction = () => { };
@@ -89,7 +89,7 @@ public class Server : ServerClientParent
     {
         if (_password != null)
         {
-            server_password = _password;
+            ServerPassword = _password;
         }
         ServerLogger.ServerLog("Starting server");
         AcceptClientThread = new Thread(AcceptClients);
@@ -126,6 +126,8 @@ public class Server : ServerClientParent
         {
             Players[playerID].Handler.Send(ServerKickPacket.Build(0, reason));
             Players[playerID].Handler.Shutdown(SocketShutdown.Both);
+            Players[playerID].Handler.Close();
+            Players[playerID].Handler.Dispose();
         }
         catch (Exception e)
         {
@@ -186,20 +188,24 @@ public class Server : ServerClientParent
 
         try
         {
-            Socket listener = new Socket(
+            _listener = new Socket(
                 ipAddress.AddressFamily,
                 SocketType.Stream,
                 ProtocolType.Tcp
             );
 
-            listener.Bind(localEndPoint);
+            _listener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            _listener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, true);
 
-            listener.Listen(100);
+            _listener.Bind(localEndPoint);
+
+            _listener.Listen(100);
 
             while (true)
             {
                 ServerLogger.AC("SERVER: Waiting for a connection...");
-                Socket Handler = listener.Accept();
+                Socket handler = _listener.Accept();
+                _handler = handler;
                 ServerLogger.AC("SERVER: Client connecting");
 
                 // Incoming data from the client.
@@ -209,7 +215,7 @@ public class Server : ServerClientParent
                 while (total_rec < 4)
                 {
                     byte[] partial_bytes = new byte[1024];
-                    int bytesRec = Handler.Receive(rec_bytes);
+                    int bytesRec = handler.Receive(rec_bytes);
 
                     total_rec += bytesRec;
 
@@ -237,7 +243,7 @@ public class Server : ServerClientParent
                 while (total_rec < packet_len)
                 {
                     byte[] partial_bytes = new byte[1024];
-                    int bytesRec = Handler.Receive(partial_bytes);
+                    int bytesRec = handler.Receive(partial_bytes);
 
                     total_rec += bytesRec;
                     ArrayExtentions.Merge(
@@ -253,16 +259,16 @@ public class Server : ServerClientParent
 
                 if (!AcceptingClients)
                 {
-                    Handler.Send(
+                    handler.Send(
                         ServerKickPacket.Build(0, "Server is not accepting clients at this time")
                     );
                     ServerLogger.AC("SERVER: Client kicked - not accepting clients");
                     continue;
                 }
 
-                if (server_password != "" && initPacket.Password != server_password)
+                if (ServerPassword != "" && initPacket.Password != ServerPassword)
                 {
-                    Handler.Send(
+                    handler.Send(
                         ServerKickPacket.Build(0, "Wrong Password: '" + initPacket.Password + "'")
                     );
                     ServerLogger.AC("SERVER: Client kicked - wrong password");
@@ -272,7 +278,7 @@ public class Server : ServerClientParent
                 // Version mismatch
                 if (initPacket.Version != NetworkSettings.VERSION)
                 {
-                    Handler.Send(
+                    handler.Send(
                         ServerKickPacket.Build(
                             0,
                             "Wrong Version:\nServer: "
@@ -291,7 +297,7 @@ public class Server : ServerClientParent
                 }
 
                 // TODO: Add player join logic
-                ServerPlayer player = AddPlayer(Handler);
+                ServerPlayer player = AddPlayer(handler);
                 player.Name = initPacket.Name;
 
                 foreach (Action<ServerPlayer> action in hierachy.OnPlayerJoinActions)
@@ -308,8 +314,8 @@ public class Server : ServerClientParent
                     "Player " + player.GetUniqueString() + " connected. Beginning recieve"
                 );
 
-                Handler.BeginReceive(
-                    player.buffer,
+                handler.BeginReceive(
+                    player.Buffer,
                     0,
                     1024,
                     0,
@@ -318,7 +324,7 @@ public class Server : ServerClientParent
                 );
             }
         }
-        catch (ThreadAbortException) { }
+        catch (ThreadAbortException) {  }
         catch (Exception e)
         {
             Debug.LogError(e.ToString());
@@ -342,7 +348,7 @@ public class Server : ServerClientParent
     {
         try
         {
-            while (!stopping)
+            while (!Stopping)
             {
                 if (!SendQueue.IsEmpty)
                 {
@@ -410,27 +416,27 @@ public class Server : ServerClientParent
         if (bytesRead > 0)
         {
             ArrayExtentions.Merge(
-                CurrentPlayer.long_buffer,
-                CurrentPlayer.buffer,
-                CurrentPlayer.long_buffer_size
+                CurrentPlayer.LongBuffer,
+                CurrentPlayer.Buffer,
+                CurrentPlayer.LongBufferSize
             );
-            CurrentPlayer.long_buffer_size += bytesRead;
+            CurrentPlayer.LongBufferSize += bytesRead;
 
             ReprocessBuffer:
 
             if (
-                CurrentPlayer.current_packet_length == -1
-                && CurrentPlayer.long_buffer_size >= PacketBuilder.PacketLenLen
+                CurrentPlayer.CurrentPacketLength == -1
+                && CurrentPlayer.LongBufferSize >= PacketBuilder.PacketLenLen
             )
             {
-                CurrentPlayer.current_packet_length = PacketBuilder.GetPacketLength(
-                    CurrentPlayer.long_buffer
+                CurrentPlayer.CurrentPacketLength = PacketBuilder.GetPacketLength(
+                    CurrentPlayer.LongBuffer
                 );
             }
 
             if (
-                CurrentPlayer.current_packet_length != -1
-                && CurrentPlayer.long_buffer_size >= CurrentPlayer.current_packet_length
+                CurrentPlayer.CurrentPacketLength != -1
+                && CurrentPlayer.LongBufferSize >= CurrentPlayer.CurrentPacketLength
             )
             {
                 ServerLogger.R("Recieved Packet from " + CurrentPlayer.GetUniqueString());
@@ -438,9 +444,9 @@ public class Server : ServerClientParent
                     new Tuple<int, byte[]>(
                         CurrentPlayer.ID,
                         ArrayExtentions.Slice(
-                            CurrentPlayer.long_buffer,
+                            CurrentPlayer.LongBuffer,
                             0,
-                            CurrentPlayer.current_packet_length
+                            CurrentPlayer.CurrentPacketLength
                         )
                     )
                 );
@@ -448,16 +454,16 @@ public class Server : ServerClientParent
                 ArrayExtentions.Merge(
                     new_buffer,
                     ArrayExtentions.Slice(
-                        CurrentPlayer.long_buffer,
-                        CurrentPlayer.current_packet_length,
+                        CurrentPlayer.LongBuffer,
+                        CurrentPlayer.CurrentPacketLength,
                         1024
                     ),
                     0
                 );
-                CurrentPlayer.long_buffer = new_buffer;
-                CurrentPlayer.long_buffer_size -= CurrentPlayer.current_packet_length;
-                CurrentPlayer.current_packet_length = -1;
-                if (CurrentPlayer.long_buffer_size > 0)
+                CurrentPlayer.LongBuffer = new_buffer;
+                CurrentPlayer.LongBufferSize -= CurrentPlayer.CurrentPacketLength;
+                CurrentPlayer.CurrentPacketLength = -1;
+                if (CurrentPlayer.LongBufferSize > 0)
                 {
                     goto ReprocessBuffer;
                 }
@@ -467,7 +473,7 @@ public class Server : ServerClientParent
             // CurrentPlayer.Reset(); // Reset buffers
             //
             handler.BeginReceive(
-                CurrentPlayer.buffer,
+                CurrentPlayer.Buffer,
                 0,
                 1024,
                 0,
@@ -485,7 +491,7 @@ public class Server : ServerClientParent
         else
         {
             handler.BeginReceive(
-                CurrentPlayer.buffer,
+                CurrentPlayer.Buffer,
                 0,
                 1024,
                 0,
@@ -499,7 +505,7 @@ public class Server : ServerClientParent
     {
         try
         {
-            while (!stopping)
+            while (!Stopping)
             {
                 if (ContentQueue.IsEmpty)
                 {   
@@ -561,9 +567,8 @@ public class Server : ServerClientParent
     public void Stop(string reason)
     {
         ServerLogger.ServerLog("Server Shutting Down");
-        stopping = true;
-        try { Handler.Shutdown(SocketShutdown.Both); } catch (Exception e) { }//Debug.Log(e); }
-        try { listener.Shutdown(SocketShutdown.Both); } catch (Exception e) { }//Debug.Log(e); }
+        Stopping = true;
+        
         Thread.Sleep(5);
         try { AcceptClientThread.Abort(); } catch (Exception e) { }//Debug.Log(e); }
         try { RecieveThread.Abort(); } catch (Exception e) { }//Debug.Log(e); }
@@ -573,8 +578,21 @@ public class Server : ServerClientParent
             if (reason is null) try { player.Handler.Send(ServerKickPacket.Build(0, "Server shutting down. No reason given")); } catch (Exception e) { }//Debug.Log(e); }
             else try { player.Handler.Send(ServerKickPacket.Build(0, $"Server shutting down. Reason: {reason}")); } catch (Exception e) { }//Debug.Log(e); }
 
-            try { player.Handler.Shutdown(SocketShutdown.Both); } catch (Exception e) { }//Debug.Log(e); }
+            try { player.Handler.Shutdown(SocketShutdown.Both); player.Handler.Close(); player.Handler.Dispose(); } catch (Exception e) { Debug.Log(e); }
         }
+
+        try { _handler?.Shutdown(SocketShutdown.Both); 
+            _handler?.Close();
+            _handler?.Dispose(); 
+        } catch (Exception e) { Debug.Log(e); }
+        Debug.Log(_listener);
+
+        try { _listener?.Shutdown(SocketShutdown.Both); } catch (Exception e) { }// { Debug.Log(e); }
+        try { _listener?.Disconnect(false); } catch (Exception e) { } // { Debug.Log(e); }
+        try { _listener?.Close(); } catch (Exception e) { Debug.Log(e); }
+        try { _listener?.Dispose(); } catch (Exception e) { Debug.Log(e); }
+        
+        Debug.Log(_listener.Connected);
         instance = null;
         is_running = false;
         ServerLogger.ServerLog("Server Shut Down Complete");

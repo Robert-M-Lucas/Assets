@@ -22,6 +22,9 @@ public class CanvasManager : MonoBehaviour
 
     public TMP_Text TurnProgressText;
 
+    public TMP_Text ChessClock;
+    float _time = 0;
+
     bool escape_menu_active = false;
 
     //public CanvasGroup Chessboard2D;
@@ -89,9 +92,7 @@ public class CanvasManager : MonoBehaviour
     public void ExitToMenu()
     {
         ChessSettingsScript chessSettingsScript = FindObjectOfType<ChessSettingsScript>();
-        chessSettingsScript.OnApplicationQuit();
-        Destroy(chessSettingsScript.gameObject);
-        SceneManager.LoadScene(0);
+        chessSettingsScript.QuitToMainMenu();
     }
 
     public void Quit()
@@ -120,5 +121,43 @@ public class CanvasManager : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) { ToggleEscapeMenu(); }
+    }
+
+    private void FixedUpdate()
+    {
+        _time += Time.fixedDeltaTime;
+        float temp_time = _time;
+
+        int hours = (int) temp_time / 3600;
+        temp_time %= 3600;
+
+        int minutes = (int) temp_time / 60;
+        temp_time %= 60;
+
+        int seconds = (int) temp_time;
+
+        string time_text = "";
+        if (hours > 0)
+        {
+            if (hours < 10)
+            {
+                time_text += "0";
+            }
+            time_text += $"{hours}:";
+        }
+        
+        if (minutes < 10)
+        {
+            time_text += "0";
+        }
+        time_text += $"{minutes}:";
+
+        if (seconds < 10)
+        {
+            time_text += "0";
+        }
+        time_text += $"{seconds}";
+
+        ChessClock.text = time_text;
     }
 }

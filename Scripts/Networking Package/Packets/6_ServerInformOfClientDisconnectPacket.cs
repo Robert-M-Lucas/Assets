@@ -9,7 +9,7 @@ public class ServerInformOfClientDisconnectPacket {
     public int ClientUID;
     public ServerInformOfClientDisconnectPacket(Packet packet){
         RID = packet.RID;
-        ClientUID = BitConverter.ToInt32(packet.contents[0]);
+        ClientUID = BitConverter.ToInt32(packet.Contents[0]);
     }
 
     public static byte[] Build(int _RID, int _ClientUID) {

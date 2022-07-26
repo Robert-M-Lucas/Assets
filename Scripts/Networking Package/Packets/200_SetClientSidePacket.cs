@@ -9,7 +9,7 @@ public class SetClientSidePacket {
     public int side;
     public SetClientSidePacket(Packet packet){
         RID = packet.RID;
-        side = BitConverter.ToInt32(packet.contents[0]);
+        side = BitConverter.ToInt32(packet.Contents[0]);
     }
 
     public static byte[] Build(int _RID, int _side) {

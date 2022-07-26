@@ -4,26 +4,26 @@ using UnityEngine;
 
 public struct VisualUpdate
 {
-    public int code;
-    public string piece_name;
-    public Vector2Int position;
-    public Vector2Int position2;
-    public bool side;
-    public bool jump;
+    public int Code;
+    public string PieceName;
+    public Vector2Int Position;
+    public Vector2Int Position2;
+    public bool Side;
+    public bool Jump;
 
-    private VisualUpdate(int code, string piece_name, Vector2Int position, bool side, Vector2Int position2, bool jump)
+    private VisualUpdate(int code, string pieceName, Vector2Int position, bool side, Vector2Int position2, bool jump)
     {
-        this.code = code;
-        this.piece_name = piece_name;
-        this.position = position;
-        this.position2 = position2;
-        this.side = side;
-        this.jump = jump;
+        this.Code = code;
+        this.PieceName = pieceName;
+        this.Position = position;
+        this.Position2 = position2;
+        this.Side = side;
+        this.Jump = jump;
     }
 
-    public static VisualUpdate Create(string piece_name, bool side, Vector2Int position)
+    public static VisualUpdate Create(string pieceName, bool side, Vector2Int position)
     {
-        return new VisualUpdate(0, piece_name, position, side, Vector2Int.zero, false);
+        return new VisualUpdate(0, pieceName, position, side, Vector2Int.zero, false);
     }
 
     public static VisualUpdate Destroy(Vector2Int position)

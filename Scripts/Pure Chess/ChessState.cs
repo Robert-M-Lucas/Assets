@@ -101,7 +101,7 @@ public class ChessState
     {
         possible_moves = new List<Tuple<Vector2Int, bool>>();
         Piece piece = GetPieceAtPosition(position);
-        if (piece == null || piece.side != turn) { return false; }
+        if (piece == null || piece.Side != turn) { return false; }
 
         List<Vector2Int> temp_possible_moves = piece.GetMoves(this);
 
@@ -136,18 +136,18 @@ public class ChessState
             for (int y = 0; y < 8; y++)
             {
                 if (new_state.Board[x, y] is null) { continue; }
-                bool piece_side = new_state.Board[x, y].side;
+                bool piece_side = new_state.Board[x, y].Side;
                 //TODO: TEMP
                 if (piece_side == side) { continue; }
 
-                if (!CheckCheckSquares.CanGiveCheck(new_state.Kings[0].position, new_state.Kings[1].position, piece_side, new Vector2Int(x, y))) { continue; }
+                if (!CheckCheckSquares.CanGiveCheck(new_state.Kings[0].Position, new_state.Kings[1].Position, piece_side, new Vector2Int(x, y))) { continue; }
 
                 List<Vector2Int> this_move = new_state.Board[x, y].GetMoves(new_state);
                 
 
                 foreach (Vector2Int move in this_move)
                 {
-                    if (!piece_side && move == new_state.Kings[0].position)
+                    if (!piece_side && move == new_state.Kings[0].Position)
                     {
                         if (side)
                         {
@@ -158,7 +158,7 @@ public class ChessState
                             check = -1;
                         }
                     }
-                    else if (piece_side && move == new_state.Kings[1].position)
+                    else if (piece_side && move == new_state.Kings[1].Position)
                     {
                         if (side && check != 1)
                         {
@@ -191,7 +191,7 @@ public class ChessState
                     new_board[x, y] = Board[x, y].Clone();
                     if (new_board[x, y].GetType() == typeof(King))
                     {
-                        if (new_board[x, y].side)
+                        if (new_board[x, y].Side)
                         {
                             new_kings[0] = (King)new_board[x, y];
                         }
@@ -240,7 +240,7 @@ public class ChessState
         }
         Piece piece = GetPieceAtPosition(from);
         Board[to.x, to.y] = piece;
-        piece.position = to;
+        piece.Position = to;
         Board[from.x, from.y] = null;
         if (real)
         {

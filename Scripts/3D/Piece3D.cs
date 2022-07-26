@@ -10,6 +10,9 @@ public class Piece3D : MonoBehaviour
     public bool Jump = false;
     public float JumpHeight = 3f;
 
+    public GameObject Text;
+    public GameObject Text2;
+
     [HideInInspector]
     public Vector3 MovingFrom;
     [HideInInspector]
@@ -20,6 +23,17 @@ public class Piece3D : MonoBehaviour
     public bool ForceJump = false;
 
     const float MOVE_TIME = 0.3f;
+
+    public void ShowText(bool show)
+    {
+        Text.gameObject.SetActive(show);
+        Text2.gameObject.SetActive(show);
+    }
+
+    private void Start()
+    {
+        // ShowText(false);
+    }
 
     void Update()
     {

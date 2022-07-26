@@ -2,13 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// This is a class
-/// </summary>
 public class QuitReason : MonoBehaviour
 {
-    public string reason = "";
-    public bool claimed = false;
+    public string Reason = "";
+    public bool Claimed = false;
     void Awake()
     {
         DontDestroyOnLoad(this);
