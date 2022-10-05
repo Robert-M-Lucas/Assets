@@ -10,8 +10,8 @@ using ChessPieces;
 public class AITurnHandler : TurnHandlerInterface
 {
     const int DEPTH = 4;
-    const float HEATMAP_MULTIPLIER = 0.25f;
-    const float POSSIBLE_MOVES_MULTIPLIER = 0.15f;
+    const float HEATMAP_MULTIPLIER = 0.15f;
+    const float POSSIBLE_MOVES_MULTIPLIER = 0.03f;
 
     bool finding_move = false;
     float progress = 0;
@@ -294,6 +294,45 @@ public class AITurnHandler : TurnHandlerInterface
                 { 0.8f ,0.8f ,0.8f ,0.8f ,0.8f ,0.8f ,0.8f ,0.8f },
                 { 0.9f ,0.9f ,0.9f ,0.9f ,0.9f ,0.9f ,0.9f ,0.9f },
                 { 1    ,1    ,1    ,1    ,1    ,1    ,1    ,1    },
+        }
+        },
+        {
+            typeof(Knight),
+            new float[,] {
+                { 0    ,0    ,0    ,0    ,0    ,0    ,0    ,0    },
+                { 0    ,0.1f ,0.1f ,0.2f ,0.2f ,0.1f ,0.1f ,0    },
+                { 0.1f ,0.2f ,0.3f ,0.5f ,0.5f ,0.3f ,0.2f ,0.1f },
+                { 0.2f ,0.4f ,0.5f ,0.8f ,0.8f ,0.5f ,0.4f ,0.2f },
+                { 0.3f ,0.4f ,0.5f ,0.7f ,0.7f ,0.5f ,0.4f ,0.3f },
+                { 0.2f ,0.3f ,0.5f ,0.6f ,0.6f ,0.5f ,0.3f ,0.2f },
+                { 0.1f ,0.2f ,0.4f ,0.5f ,0.5f ,0.4f ,0.2f ,0.1f },
+                { 0.1f ,0.2f ,0.3f ,0.4f ,0.4f ,0.3f ,0.2f ,0.1f },
+        }
+        },
+        {
+            typeof(Queen),
+            new float[,] {
+                { 0    ,0    ,0    ,0.3f ,0    ,0    ,0    ,0    },
+                { 0    ,0    ,0    ,0.3f ,0    ,0    ,0    ,0    },
+                { 0.2f ,0.3f ,0.4f ,0.4f ,0.4f ,0.4f ,0.3f ,0.2f },
+                { 0.2f ,0.3f ,0.4f ,0.4f ,0.4f ,0.4f ,0.3f ,0.2f },
+                { 0.2f ,0.3f ,0.4f ,0.4f ,0.4f ,0.4f ,0.3f ,0.2f },
+                { 0.2f ,0.3f ,0.4f ,0.4f ,0.4f ,0.4f ,0.3f ,0.2f },
+                { 0.1f ,0.2f ,0.2f ,0.2f ,0.2f ,0.2f ,0.2f ,0.1f },
+                { 0.1f ,0.2f ,0.2f ,0.2f ,0.2f ,0.2f ,0.2f ,0.1f },
+        }
+        },
+        {
+            typeof(Bishop),
+            new float[,] {
+                { 0    ,0    ,0    ,0    ,0    ,0    ,0    ,0    },
+                { 0    ,0    ,0    ,0    ,0    ,0    ,0    ,0    },
+                { 0.2f ,0.3f ,0.4f ,0.4f ,0.4f ,0.4f ,0.3f ,0.2f },
+                { 0.2f ,0.3f ,0.4f ,0.4f ,0.4f ,0.4f ,0.3f ,0.2f },
+                { 0.2f ,0.3f ,0.4f ,0.4f ,0.4f ,0.4f ,0.3f ,0.2f },
+                { 0.2f ,0.3f ,0.4f ,0.4f ,0.4f ,0.4f ,0.3f ,0.2f },
+                { 0.1f ,0.2f ,0.2f ,0.2f ,0.2f ,0.2f ,0.2f ,0.1f },
+                { 0.1f ,0.2f ,0.2f ,0.2f ,0.2f ,0.2f ,0.2f ,0.1f },
         }
         },
     };

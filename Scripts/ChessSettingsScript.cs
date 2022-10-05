@@ -10,6 +10,7 @@ public class ChessSettingsScript : MonoBehaviour
 
     public MainMenuCanvasManager mainMenuCanvasManager;
 
+    public bool Restartable = true;
     public static int JoinSide = -1;
     public static bool PlayerHasJoined = false;
 
@@ -61,7 +62,6 @@ public class ChessSettingsScript : MonoBehaviour
 
     public void Join()
     {
-        Debug.Log(Client.has_instance);
         if (locked) return;
         string IP = mainMenuCanvasManager.JoinIPInput.text;
         Client.getInstance(true).hierachy.Hierachy.Add(new ClientPacketHandler());
@@ -90,6 +90,7 @@ public class ChessSettingsScript : MonoBehaviour
             ClientPacketHandler.clientTurnHandler = (OnlineClientTurnHandler)turnHandlers[0];
         }
         JoinSide = -1;
+        Restartable = false;
         Play();
     }
 
@@ -166,6 +167,7 @@ public class ChessSettingsScript : MonoBehaviour
             turnHandlers = new TurnHandlerInterface[] { new OnlineClientTurnHandler(), null };
             ClientPacketHandler.clientTurnHandler = (OnlineClientTurnHandler)turnHandlers[0];
         }
+        Restartable = false;
         Play();
     }
 
@@ -251,7 +253,6 @@ public class ChessSettingsScript : MonoBehaviour
     {
         if (locked)
         {
-            Debug.Log(JoinSide);
             if (JoinSide != -1) { JoinSuccessful(); }
             if (PlayerHasJoined) { HostSuccessful(); } 
         }

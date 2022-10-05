@@ -88,7 +88,7 @@ namespace ChessPieces
 
     public class Queen : Piece
     {
-        public override float GetValue() => 10f;
+        public override float GetValue() => 9f;
 
         public override byte[] GetHash() => new byte[] { 1 };
 

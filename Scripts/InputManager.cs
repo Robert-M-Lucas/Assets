@@ -38,7 +38,7 @@ public class InputManager : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 1000, Square3DMask))
         {
             appearanceManager3D.hoveringOver = hit.collider.gameObject.GetComponent<Chessboard3DSquare>().position;
-            if (Input.GetMouseButtonDown(0))
+            if (I.GetMouseButtonDown(K.MainClick))
             {
                 chessManagerInterface.ChangeSelected(appearanceManager3D.hoveringOver);
             }
@@ -59,7 +59,7 @@ public class InputManager : MonoBehaviour
     void Update()
     {
         // Switch from 3D to 2D
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (I.GetKeyDown(K.PerspectiveSwitch))
         {
             PerspectiveMode = !PerspectiveMode;
             chessboard3DPieceManager.UpdateTheme();
@@ -74,7 +74,7 @@ public class InputManager : MonoBehaviour
         }
 
         // Toggle edge lighting
-        if (Input.GetKeyDown(KeyCode.E))
+        if (I.GetKeyDown(K.EdgeLightToggle))
         {
             EdgeLit = !EdgeLit;
             chessboard3DPieceManager.UpdateTheme();
@@ -86,7 +86,7 @@ public class InputManager : MonoBehaviour
         float mouse_x = Input.GetAxis("Mouse X");
         float mouse_y = Input.GetAxis("Mouse Y");
 
-        if (Input.GetMouseButton(1) && PerspectiveMode)
+        if (I.GetMouseButton(K.SecondaryClick) && PerspectiveMode)
         {
             cameraControl.RotateCamera(new Vector2(mouse_x * look_sensitivity.x, mouse_y * look_sensitivity.y));
             HandleNoHit();

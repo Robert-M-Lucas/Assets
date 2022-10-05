@@ -16,12 +16,12 @@ public class SoundManager : MonoBehaviour
     int _previous = -1;
     public void PlayOnClick()
     {
-        PlaySound(OnClick);
+        // PlaySound(OnClick);
     }
 
     public void PlayOffClick()
     {
-        PlaySound(OffClick);
+        // PlaySound(OffClick);
     }
 
     public void PlayPieceMoveSound(Vector3 pos)

@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using ChessPieces;
 using TMPro;
+using System;
 
 public class CanvasManager : MonoBehaviour
 {
@@ -22,6 +24,10 @@ public class CanvasManager : MonoBehaviour
 
     public TMP_Text TurnProgressText;
 
+    public TMP_Text EvaluationText;
+    public TMP_Text WhiteLostText;
+    public TMP_Text BlackLostText;
+
     public TMP_Text ChessClock;
     float _time = 0;
 
@@ -32,6 +38,63 @@ public class CanvasManager : MonoBehaviour
     void Start()
     {
         
+    }
+
+    public void SetEvaluationText(string text)
+    {
+        EvaluationText.text = text;
+    }
+
+    public void UpdateEvaluation(ChessState state)
+    {
+        List<char>[] LostPieces = new List<char>[] { new List<char> { 'e', 'd', 'd', 'c', 'c', 'b', 'b', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a' },
+                                                     new List<char> { 'e', 'd', 'd', 'c', 'c', 'b', 'b', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a' }, };
+      
+        int piece_score = 0;
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                if (state.Board[x, y] is null || state.Board[x, y].GetType() == typeof(King)) { continue; }
+
+                int value = (int) state.Board[x, y].GetValue();
+                int side = MathP.BoolToInt(state.Board[x, y].Side);
+
+                if (!state.Board[x, y].Side) { value *= -1; }
+
+                char to_remove;
+                Type piece_type = state.Board[x, y].GetType();
+                if (piece_type == typeof(Queen)) to_remove = 'e';
+                else if (piece_type == typeof(Rook)) to_remove = 'd';
+                else if (piece_type == typeof(Bishop)) to_remove = 'c';
+                else if (piece_type == typeof(Knight)) to_remove = 'b';
+                else to_remove = 'a';
+                LostPieces[side].Remove(to_remove);
+
+                piece_score += value;
+            }
+        }
+
+        if (piece_score == 0)
+        {
+            EvaluationText.text = "Equal";
+        }
+        else if (piece_score > 0)
+        {
+            EvaluationText.text = $"White +{piece_score}";
+        }
+        else
+        {
+            EvaluationText.text = $"Black +{-piece_score}";
+        }
+
+        string white_lost = "";
+        foreach (char piece in LostPieces[1]) { white_lost += piece; }
+        WhiteLostText.text = white_lost;
+
+        string black_lost = "";
+        foreach (char piece in LostPieces[0]) { black_lost += piece; }
+        BlackLostText.text = black_lost.ToUpper();
     }
 
     public void SetCheck(bool check)
@@ -106,21 +169,23 @@ public class CanvasManager : MonoBehaviour
 
     public void Restart()
     {
+        if (!FindObjectOfType<ChessSettingsScript>().Restartable) return;
         chessManager.InitialiseBoard();
         chessManagerInterface.ResetManager();
         CheckText.transform.parent.gameObject.SetActive(false);
         CheckmateText.transform.parent.gameObject.SetActive(false);
+        _time = 0;
         SetTurnText(true);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (I.GetKeyDown(K.RestartKey))
         {
             Restart();
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape)) { ToggleEscapeMenu(); }
+        if (I.GetKeyDown(K.EscapeMenuKey)) { ToggleEscapeMenu(); }
     }
 
     private void FixedUpdate()
@@ -136,7 +201,7 @@ public class CanvasManager : MonoBehaviour
 
         int seconds = (int) temp_time;
 
-        string time_text = "";
+        string time_text = "<mspace=0.55em>";
         if (hours > 0)
         {
             if (hours < 10)

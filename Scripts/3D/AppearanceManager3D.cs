@@ -96,13 +96,13 @@ public class AppearanceManager3D : MonoBehaviour
 
         pieceManager.UpdateTheme();
 
-        appearanceManager2D.ChangeTheme(themes[themeID].whiteSquareMaterial, themes[themeID].blackSquareMaterial);
+        // appearanceManager2D.ChangeTheme(themes[themeID].whiteSquareMaterial, themes[themeID].blackSquareMaterial);
     }
 
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
+        if (I.GetKeyDown(K.ThemeSwitch))
         {
             int new_theme = ActiveTheme + 1;
             if (new_theme >= themes.Length)

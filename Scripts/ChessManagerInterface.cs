@@ -35,6 +35,8 @@ public class ChessManagerInterface : MonoBehaviour
         {
             inputManager.cameraControl.RotateCamera(new Vector2(180, 0));
         }
+
+        canvasManager.UpdateEvaluation(chessManager.State);
     }
 
     public bool MoveExists(Vector2Int target_move, out bool check)
@@ -114,6 +116,7 @@ public class ChessManagerInterface : MonoBehaviour
         }
 
         soundManager.PlayPieceMoveSound(new Vector3(pos2.x - 3.5f, 0, 7 - (pos2.y + 3.5f)));
+        canvasManager.UpdateEvaluation(chessManager.State);
     }
 
     public void Update()
